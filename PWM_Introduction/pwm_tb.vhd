@@ -12,21 +12,17 @@ ARCHITECTURE sim OF pwm_tb IS
 
     CONSTANT clk_hz : INTEGER := 50e6;
     CONSTANT clk_period : TIME := 1 sec / clk_hz;
-    CONSTANT N : INTEGER := 8;
 
     SIGNAL clk : STD_LOGIC := '1';
     SIGNAL rst : STD_LOGIC := '1';
+    SIGNAL m : STD_LOGIC_VECTOR(3 DOWNTO 0) := "0000";
     SIGNAL s : STD_LOGIC := '0';
-    SIGNAL m : UNSIGNED(N - 1 DOWNTO 0) := (OTHERS => '0');
 
 BEGIN
 
     clk <= NOT clk AFTER clk_period / 2;
 
     DUT : ENTITY work.pwm(rtl)
-        GENERIC MAP(
-            N => N
-        )
         PORT MAP(
             clk => clk,
             rst => rst,
@@ -39,29 +35,17 @@ BEGIN
         WAIT FOR clk_period * 2;
 
         rst <= '0';
-        m <= to_unsigned(2 ** N / 8, m'length);
+        m <= "1000";
 
-        WAIT FOR clk_period * 2 ** N/2;
+        WAIT FOR clk_period * 16;
 
-        m <= to_unsigned( 150, m'length);
+        m <= "1100";
 
-        WAIT FOR clk_period * 2 ** N/2;
+        WAIT FOR clk_period * 16;
 
-        m <= to_unsigned( 160 , m'length);
+        m <= "0101";
 
-        WAIT FOR clk_period * 2 ** N/2;
-
-        m <= to_unsigned( 200 / 4, m'length);
-
-        WAIT FOR clk_period * 2 ** N/2;
-
-        m <= to_unsigned( 150 / 2, m'length);
-
-        WAIT FOR clk_period * 2 ** N/2;
-
-        m <= to_unsigned( 140 / 3, m'length);
-
-        WAIT FOR clk_period * 2 ** N/2;
+        WAIT FOR clk_period * 16;
 
         finish;
     END PROCESS;
