@@ -1,1 +1,1 @@
-# PowerElectronicsVHDL
+# Power Electronics VHDL
